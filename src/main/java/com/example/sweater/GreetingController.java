@@ -1,8 +1,8 @@
 package com.example.sweater;
 
 
-import com.example.sweater.domain.message;
-import com.example.sweater.repos.messageRepo;
+import com.example.sweater.domain.Message;
+import com.example.sweater.repos.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +17,7 @@ import java.util.Map;
 public class GreetingController {
 
     @Autowired
-private messageRepo messageR;
-
+private MessageRepo messageRepo;
 
     @GetMapping("/")
     public String greeting(Map<String,Object> model) { return "greeting"; }
@@ -26,7 +25,7 @@ private messageRepo messageR;
     @GetMapping("/main")
     public  String main(Map<String,Object> model)
     {
-      Iterable<message> messages =  messageR.findAll();
+      Iterable<Message> messages =  messageRepo.findAll();
         model.put("messages", messages);
         return "main";
     }
@@ -34,11 +33,9 @@ private messageRepo messageR;
     @PostMapping("/main")
     public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model)
     {
-
-
-      message msg =  new message(text, tag);
-      messageR.save(msg);
-        Iterable<message> messages =  messageR.findAll();
+      Message msg =  new Message(text, tag);
+      messageRepo.save(msg);
+        Iterable<Message> messages =  messageRepo.findAll();
         model.put("messages", messages);
         return "main";
     }
@@ -46,10 +43,12 @@ private messageRepo messageR;
     @PostMapping("filter")
     public String filter(@RequestParam String filter, Map<String, Object> model)
     {
-        Iterable<message> messages;
-        if(filter!=null || filter.isEmpty())
-        { messages = messageR.findByTag(filter);
-        } else {messages = messageR.findAll();}
+        Iterable<Message> messages;
+        if(filter!=null && !filter.isEmpty())
+        { messages = messageRepo.findByTag(filter);
+        } else {
+            messages = messageRepo.findAll();
+        }
         model.put("messages", messages);
         return "main";
     }

@@ -6,16 +6,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class message {
+public class Message {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    public message() {
+    public Message() {
     }
 
-    public message(String text, String tag) {
+    public Message(String text, String tag) {
         this.text = text;
         this.tag = tag;
     }
